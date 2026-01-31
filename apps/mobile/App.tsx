@@ -1,144 +1,92 @@
-import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { chat } from "@stuba/api-client";
-import { ChatResponse } from "@stuba/contracts";
-import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import HomeScreen from "./src/screens/HomeScreen";
+import HistoryScreen from "./src/screens/HistoryScreen";
+import DashboardScreen from "./src/screens/DashboardScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import EventScreen from "./src/screens/EventScreen";
+import CantineMenuScreen from "./src/screens/CantineMenuScreen";
+import VirtualCardScreen from "./src/screens/VirtualCardScreen";
+import MoreScreen from "./src/screens/MoreScreen";
+import { colors } from "./src/theme";
+import BottomNav from "./src/components/BottomNav";
+import { HomeStackParamList, RootTabParamList } from "./src/navigation/types";
 
-export default function App() {
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [response, setResponse] = useState<ChatResponse | null>(null);
+const Tab = createBottomTabNavigator<RootTabParamList>();
+const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 
-  const submit = async () => {
-    setError(null);
-    setResponse(null);
-    setLoading(true);
-    try {
-      const data = await chat(query);
-      setResponse(data);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.background,
+    card: colors.surface,
+    text: colors.text
+  }
+};
 
+function HomeStackNavigator() {
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      <Text style={styles.title}>RAG Chat (Mobile)</Text>
-      <Text style={styles.subtitle}>Uses shared API client + Fastify + FastAPI stub</Text>
-      <View style={styles.inputRow}>
-        <TextInput
-          style={styles.input}
-          placeholder="Ask me something..."
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={submit}
-        />
-        <TouchableOpacity style={styles.button} disabled={loading || !query.trim()} onPress={submit}>
-          <Text style={styles.buttonText}>{loading ? "..." : "Ask"}</Text>
-        </TouchableOpacity>
-      </View>
-      {error && <Text style={styles.error}>{error}</Text>}
-      {response && (
-        <ScrollView style={styles.card} contentContainerStyle={{ paddingBottom: 32 }}>
-          <Text style={styles.sectionTitle}>Answer</Text>
-          <Text style={styles.paragraph}>{response.answer}</Text>
-          <Text style={styles.meta}>Latency: {response.latency_ms.toFixed(1)} ms</Text>
-          <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Citations</Text>
-          {response.citations.map((c) => (
-            <View key={c.doc_id} style={styles.citation}>
-              <Text style={styles.citationTitle}>{c.title}</Text>
-              <Text style={styles.citationSnippet}>{c.snippet}</Text>
-              <Text style={styles.meta}>Score: {c.score.toFixed(3)}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      )}
-    </SafeAreaView>
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { fontWeight: "700" }
+      }}
+    >
+      <HomeStack.Screen
+        name="HomeMain"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen name="Event" component={EventScreen} options={{ title: "Event" }} />
+      <HomeStack.Screen
+        name="CantineMenu"
+        component={CantineMenuScreen}
+        options={{ title: "Cantine Menu" }}
+      />
+      <HomeStack.Screen
+        name="VirtualCard"
+        component={VirtualCardScreen}
+        options={{ title: "Virtual Card" }}
+      />
+      <HomeStack.Screen name="More" component={MoreScreen} options={{ title: "More" }} />
+    </HomeStack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f7f7fb",
-    padding: 16
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "700"
-  },
-  subtitle: {
-    color: "#555",
-    marginTop: 4,
-    marginBottom: 12
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8
-  },
-  input: {
-    flex: 1,
-    backgroundColor: "white",
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    fontSize: 16
-  },
-  button: {
-    backgroundColor: "#111827",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 8
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700"
-  },
-  error: {
-    color: "red",
-    marginTop: 12
-  },
-  card: {
-    marginTop: 16,
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: "#eee"
-  },
-  sectionTitle: {
-    fontWeight: "700",
-    fontSize: 18
-  },
-  paragraph: {
-    marginTop: 6,
-    fontSize: 16,
-    color: "#333"
-  },
-  meta: {
-    color: "#777",
-    marginTop: 4
-  },
-  citation: {
-    marginTop: 12,
-    padding: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#eee",
-    backgroundColor: "#fafafa"
-  },
-  citationTitle: {
-    fontWeight: "700",
-    marginBottom: 4
-  },
-  citationSnippet: {
-    color: "#444"
-  }
-});
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <NavigationContainer theme={navTheme}>
+          <Tab.Navigator
+            tabBar={(props) => <BottomNav {...props} />}
+            screenOptions={{
+              headerShown: false,
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: colors.surface },
+              headerTitleStyle: { fontWeight: "700" }
+            }}
+          >
+            <Tab.Screen
+              name="Home"
+              component={HomeStackNavigator}
+              options={{ title: "Home" }}
+            />
+            <Tab.Screen
+              name="Dashboard"
+              component={DashboardScreen}
+              options={{ title: "Dashboard" }}
+            />
+            <Tab.Screen name="History" component={HistoryScreen} options={{ title: "History" }} />
+            <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}

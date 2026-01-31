@@ -20,3 +20,4 @@ coverage.xml
 .vscode
 android
 ios
+legacy-code/*
