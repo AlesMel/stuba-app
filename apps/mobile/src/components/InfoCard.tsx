@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import { colors, radius, shadows, spacing, typography } from "../theme";
+import { radius, shadows, spacing, useTheme } from "../theme";
 
 type Props = {
   title: string;
@@ -9,6 +9,9 @@ type Props = {
 };
 
 export default function InfoCard({ title, children, style }: Props) {
+  const { colors, typography } = useTheme();
+  const styles = useMemo(() => createStyles(colors, typography), [colors, typography]);
+
   return (
     <View style={[styles.card, style]}>
       <Text style={styles.title}>{title}</Text>
@@ -17,16 +20,17 @@ export default function InfoCard({ title, children, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing(3),
-    ...shadows.card
-  },
-  title: {
-    ...typography.title
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"], typography: ReturnType<typeof useTheme>["typography"]) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.lg,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: spacing(3),
+      ...shadows.card
+    },
+    title: {
+      ...typography.title
+    }
+  });

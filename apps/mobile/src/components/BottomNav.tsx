@@ -1,28 +1,34 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import React, { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, radius, shadows, spacing } from "../theme";
+import { radius, shadows, spacing, useTheme } from "../theme";
+import { RootTabParamList } from "../navigation/types";
 
-const ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+const ICONS: Record<keyof RootTabParamList, keyof typeof Ionicons.glyphMap> = {
   Home: "home-outline",
-  Dashboard: "apps-outline",
-  History: "bar-chart-outline",
+  Dashboard: "calendar-outline",
+  History: "card-outline",
   Profile: "person-outline"
 };
 
-const ACTIVE_ICONS: Partial<Record<keyof typeof ICONS, keyof typeof Ionicons.glyphMap>> = {
+const ACTIVE_ICONS: Partial<Record<keyof RootTabParamList, keyof typeof Ionicons.glyphMap>> = {
   Home: "home",
-  Dashboard: "apps",
-  History: "bar-chart",
+  Dashboard: "calendar",
+  History: "card",
   Profile: "person"
 };
 
 export default function BottomNav({ state, descriptors, navigation }: BottomTabBarProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
   return (
     <SafeAreaView edges={["bottom"]} style={styles.safe}>
       <View style={styles.bar}>
         {state.routes.map((route, index) => {
+          const routeName = route.name as keyof RootTabParamList;
           const isFocused = state.index === index;
           const onPress = () => {
             const event = navigation.emit({
@@ -43,9 +49,8 @@ export default function BottomNav({ state, descriptors, navigation }: BottomTabB
             });
           };
 
-          const iconName =
-            (isFocused ? ACTIVE_ICONS[route.name as keyof typeof ICONS] : undefined) ??
-            ICONS[route.name];
+          const iconName = (isFocused ? ACTIVE_ICONS[routeName] : undefined) ?? ICONS[routeName];
+          const iconColor = isFocused ? colors.primary : colors.surface;
 
           return (
             <TouchableOpacity
@@ -53,7 +58,6 @@ export default function BottomNav({ state, descriptors, navigation }: BottomTabB
               accessibilityRole="button"
               accessibilityState={isFocused ? { selected: true } : {}}
               accessibilityLabel={descriptors[route.key].options.tabBarAccessibilityLabel}
-              testID={descriptors[route.key].options.tabBarTestID}
               onPress={onPress}
               onLongPress={onLongPress}
               style={[styles.item, isFocused && styles.itemActive]}
@@ -62,8 +66,9 @@ export default function BottomNav({ state, descriptors, navigation }: BottomTabB
               <Ionicons
                 name={iconName}
                 size={22}
-                color={isFocused ? colors.primary : "#e5e7eb"}
+                color={iconColor}
               />
+              {isFocused ? <View style={styles.activeDot} /> : null}
             </TouchableOpacity>
           );
         })}
@@ -72,29 +77,41 @@ export default function BottomNav({ state, descriptors, navigation }: BottomTabB
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    paddingHorizontal: spacing(4)
-  },
-  bar: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg * 1.5,
-    paddingHorizontal: spacing(2),
-    paddingVertical: spacing(1.5),
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...shadows.card
-  },
-  item: {
-    width: 46,
-    height: 46,
-    borderRadius: 46 / 2,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  itemActive: {
-    backgroundColor: colors.surface,
-    ...shadows.card
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"]) =>
+  StyleSheet.create({
+    safe: {
+      paddingHorizontal: spacing(4),
+      backgroundColor: colors.background
+    },
+    bar: {
+      backgroundColor: colors.primary,
+      borderRadius: radius.lg * 1.5,
+      paddingHorizontal: spacing(2),
+      paddingVertical: spacing(1.5),
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      ...shadows.card
+    },
+    item: {
+      width: 46,
+      height: 46,
+      borderRadius: 46 / 2,
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    itemActive: {
+      backgroundColor: colors.surface,
+      ...shadows.card,
+      borderWidth: 1,
+      borderColor: colors.surface
+    },
+    activeDot: {
+      position: "absolute",
+      bottom: spacing(0.75),
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: colors.primary
+    }
+  });

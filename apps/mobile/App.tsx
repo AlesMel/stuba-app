@@ -11,24 +11,18 @@ import EventScreen from "./src/screens/EventScreen";
 import CantineMenuScreen from "./src/screens/CantineMenuScreen";
 import VirtualCardScreen from "./src/screens/VirtualCardScreen";
 import MoreScreen from "./src/screens/MoreScreen";
-import { colors } from "./src/theme";
+import { ThemeProvider, useTheme } from "./src/theme";
 import BottomNav from "./src/components/BottomNav";
 import { HomeStackParamList, RootTabParamList } from "./src/navigation/types";
+import { LocalizationProvider, useTranslation } from "./src/localization";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: colors.background,
-    card: colors.surface,
-    text: colors.text
-  }
-};
-
 function HomeStackNavigator() {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+
   return (
     <HomeStack.Navigator
       screenOptions={{
@@ -42,19 +36,61 @@ function HomeStackNavigator() {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <HomeStack.Screen name="Event" component={EventScreen} options={{ title: "Event" }} />
+      <HomeStack.Screen
+        name="Event"
+        component={EventScreen}
+        options={{ title: t("screenEventTitle") }}
+      />
       <HomeStack.Screen
         name="CantineMenu"
         component={CantineMenuScreen}
-        options={{ title: "Cantine Menu" }}
+        options={{ title: t("screenCantineTitle") }}
       />
       <HomeStack.Screen
         name="VirtualCard"
         component={VirtualCardScreen}
-        options={{ title: "Virtual Card" }}
+        options={{ title: t("screenVirtualCardTitle") }}
       />
-      <HomeStack.Screen name="More" component={MoreScreen} options={{ title: "More" }} />
+      <HomeStack.Screen name="More" component={MoreScreen} options={{ title: t("screenMoreTitle") }} />
     </HomeStack.Navigator>
+  );
+}
+
+function AppNavigation() {
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+
+  const navTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.background,
+      card: colors.surface,
+      text: colors.text
+    }
+  };
+
+  return (
+    <NavigationContainer theme={navTheme}>
+      <Tab.Navigator
+        tabBar={(props) => <BottomNav {...props} />}
+        screenOptions={{
+          headerShown: false,
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: colors.surface },
+          headerTitleStyle: { fontWeight: "700" }
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeStackNavigator} options={{ title: t("tabHome") }} />
+        <Tab.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{ title: t("tabDashboard") }}
+        />
+        <Tab.Screen name="History" component={HistoryScreen} options={{ title: t("tabHistory") }} />
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t("tabProfile") }} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -62,30 +98,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer theme={navTheme}>
-          <Tab.Navigator
-            tabBar={(props) => <BottomNav {...props} />}
-            screenOptions={{
-              headerShown: false,
-              headerShadowVisible: false,
-              headerStyle: { backgroundColor: colors.surface },
-              headerTitleStyle: { fontWeight: "700" }
-            }}
-          >
-            <Tab.Screen
-              name="Home"
-              component={HomeStackNavigator}
-              options={{ title: "Home" }}
-            />
-            <Tab.Screen
-              name="Dashboard"
-              component={DashboardScreen}
-              options={{ title: "Dashboard" }}
-            />
-            <Tab.Screen name="History" component={HistoryScreen} options={{ title: "History" }} />
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Profile" }} />
-          </Tab.Navigator>
-        </NavigationContainer>
+        <ThemeProvider>
+          <LocalizationProvider>
+            <AppNavigation />
+          </LocalizationProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

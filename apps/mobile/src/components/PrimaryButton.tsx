@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
-import { colors, radius, spacing } from "../theme";
+import { radius, spacing, useTheme } from "../theme";
 
 type Props = {
   children: ReactNode;
@@ -10,6 +10,9 @@ type Props = {
 };
 
 export default function PrimaryButton({ children, onPress, disabled, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -22,19 +25,20 @@ export default function PrimaryButton({ children, onPress, disabled, style }: Pr
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing(3),
-    paddingVertical: spacing(3),
-    borderRadius: radius.md
-  },
-  text: {
-    color: colors.surface,
-    fontWeight: "700",
-    textAlign: "center"
-  },
-  disabled: {
-    opacity: 0.55
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"]) =>
+  StyleSheet.create({
+    button: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing(3),
+      paddingVertical: spacing(3),
+      borderRadius: radius.md
+    },
+    text: {
+      color: colors.light_text,
+      fontWeight: "700",
+      textAlign: "center"
+    },
+    disabled: {
+      opacity: 0.55
+    }
+  });

@@ -9,7 +9,8 @@ import {
   Text,
   View
 } from "react-native";
-import { colors, radius, spacing, typography } from "../theme";
+import { radius, spacing, useTheme } from "../theme";
+import { useTranslation } from "../localization";
 
 type Props = {
   selectedDate: Date;
@@ -40,8 +41,11 @@ const SIDE_PAD = (SCREEN_W - ITEM_FULL) / 2;
 
 export default function DateStrip({ selectedDate, onChange }: Props) {
   const listRef = useRef<FlatList<number>>(null);
+  const { formatDate } = useTranslation();
+  const { colors, typography } = useTheme();
+  const styles = useMemo(() => createStyles(colors, typography), [colors, typography]);
 
-  // indices array should be stable (don’t recreate on every render)
+  // indices array should be stable (don't recreate on every render)
   const data = useMemo(() => Array.from({ length: TOTAL_ITEMS }, (_, i) => i), []);
 
   const anchorDate = useMemo(() => {
@@ -55,6 +59,9 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
     (date: Date) => clampIndex(MID_INDEX + diffDays(date, anchorDate)),
     [anchorDate, clampIndex]
   );
+
+  const initialIndex = useMemo(() => dateToIndex(selectedDate), [dateToIndex, selectedDate]);
+  const didInitialScroll = useRef(false);
 
   const indexToDate = useCallback(
     (index: number) => addDays(anchorDate, index - MID_INDEX),
@@ -73,7 +80,7 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
     [clampIndex]
   );
 
-  // ✅ Auto-center on mount + whenever selectedDate changes from outside
+  // Auto-center on mount + whenever selectedDate changes from outside
   useEffect(() => {
     const idx = dateToIndex(selectedDate);
     // first time can be non-animated to avoid visible jump
@@ -104,7 +111,7 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
     ({ item: index }: { item: number }) => {
       const date = indexToDate(index);
       const isActive = date.toDateString() === selectedDate.toDateString();
-      const dayLabel = date.toLocaleDateString("en-US", { weekday: "short" });
+      const dayLabel = formatDate(date, { weekday: "short" });
       const dayNumber = date.getDate();
 
       return (
@@ -122,7 +129,7 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
         </Pressable>
       );
     },
-    [indexToDate, onPressDate, selectedDate]
+    [formatDate, indexToDate, onPressDate, selectedDate]
   );
 
   return (
@@ -143,8 +150,14 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
       snapToAlignment="center"
       decelerationRate="fast"
       onMomentumScrollEnd={handleMomentumEnd}
+      onLayout={() => {
+        if (!didInitialScroll.current) {
+          didInitialScroll.current = true;
+          scrollToIndexCentered(initialIndex, false);
+        }
+      }}
       onScrollToIndexFailed={(info) => {
-        // ✅ Prevent "jump to end" when layout isn't ready
+        // Prevent "jump to end" when layout isn't ready
         // Retry after a frame using the best guess offset
         requestAnimationFrame(() => {
           listRef.current?.scrollToOffset({
@@ -160,54 +173,55 @@ export default function DateStrip({ selectedDate, onChange }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    paddingHorizontal: SIDE_PAD
-  },
-  pill: {
-    width: ITEM_WIDTH,
-    paddingVertical: spacing(2),
-    borderRadius: radius.lg * 1.1,
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  pillInactive: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border
-  },
-  pillActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginBottom: spacing(1)
-  },
-  dotInactive: {
-    backgroundColor: colors.border
-  },
-  dotActive: {
-    backgroundColor: colors.surface
-  },
-  dayLabel: {
-    ...typography.meta,
-    fontWeight: "700" as const,
-    color: colors.text
-  },
-  dayLabelActive: {
-    color: colors.surface
-  },
-  dayNumber: {
-    marginTop: spacing(0.5),
-    ...typography.title,
-    fontSize: 16,
-    fontWeight: "800" as const,
-    color: colors.text
-  },
-  dayNumberActive: {
-    color: colors.surface
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"], typography: ReturnType<typeof useTheme>["typography"]) =>
+  StyleSheet.create({
+    content: {
+      paddingHorizontal: SIDE_PAD
+    },
+    pill: {
+      width: ITEM_WIDTH,
+      paddingVertical: spacing(2),
+      borderRadius: radius.lg * 1.1,
+      borderWidth: 1,
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    pillInactive: {
+      backgroundColor: colors.surface,
+      borderColor: colors.border
+    },
+    pillActive: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary
+    },
+    dot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      marginBottom: spacing(1)
+    },
+    dotInactive: {
+      backgroundColor: colors.border
+    },
+    dotActive: {
+      backgroundColor: colors.surface
+    },
+    dayLabel: {
+      ...typography.meta,
+      fontWeight: "700" as const,
+      color: colors.text
+    },
+    dayLabelActive: {
+      color: colors.surface
+    },
+    dayNumber: {
+      marginTop: spacing(0.5),
+      ...typography.title,
+      fontSize: 16,
+      fontWeight: "800" as const,
+      color: colors.text
+    },
+    dayNumberActive: {
+      color: colors.surface
+    }
+  });

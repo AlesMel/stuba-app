@@ -1,5 +1,7 @@
+import React, { useMemo } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { colors, radius, shadows, spacing, typography } from "../theme";
+import { radius, shadows, spacing, useTheme } from "../theme";
+import { useTranslation } from "../localization";
 
 type Avatar = { uri: string };
 
@@ -16,15 +18,21 @@ const defaultAvatars: Avatar[] = [
 ];
 
 export default function DailyChallengeCard({
-  title = "Daily challenge",
-  subtitle = "Do your plan before 09:00 AM",
+  title,
+  subtitle,
   avatars = defaultAvatars
 }: Props) {
+  const { t } = useTranslation();
+  const { colors, typography } = useTheme();
+  const styles = useMemo(() => createStyles(colors, typography), [colors, typography]);
+  const heading = title ?? t("dailyChallengeTitle");
+  const description = subtitle ?? t("dailyChallengeSubtitle");
+
   return (
     <View style={styles.card}>
       <View style={{ flex: 1 }}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Text style={styles.title}>{heading}</Text>
+        <Text style={styles.subtitle}>{description}</Text>
 
         <View style={styles.avatarRow}>
           {avatars.slice(0, 3).map((avatar, index) => (
@@ -50,99 +58,100 @@ export default function DailyChallengeCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    backgroundColor: "#971D32",
-    borderRadius: radius.lg * 1.1,
-    padding: spacing(3),
-    overflow: "hidden",
-    alignItems: "center",
-    ...shadows.card
-  },
-  title: {
-    ...typography.title,
-    fontSize: 22,
-    fontWeight: "800" as const,
-    color: colors.light_text
-  },
-  subtitle: {
-    ...typography.body,
-    marginTop: spacing(1.5),
-    color: colors.light_text
-  },
-  avatarRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: spacing(3)
-  },
-  avatarWrap: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    borderWidth: 2,
-    borderColor: "#d2c4ff",
-    overflow: "hidden",
-    backgroundColor: colors.surface,
-    ...shadows.card
-  },
-  avatar: {
-    width: "100%",
-    height: "100%"
-  },
-  more: {
-    backgroundColor: "#f4f3ff",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  moreText: {
-    ...typography.meta,
-    fontWeight: "700",
-    color: colors.text
-  },
-  shapes: {
-    width: 110,
-    height: 110,
-    position: "relative",
-    marginLeft: spacing(2),
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  shape: {
-    position: "absolute",
-    borderRadius: 18,
-    opacity: 0.9
-  },
-  shapeDark: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#2f2f3a",
-    transform: [{ rotate: "14deg" }],
-    top: 10,
-    right: 4
-  },
-  shapeMid: {
-    width: 50,
-    height: 50,
-    backgroundColor: "#6e6b88",
-    transform: [{ rotate: "-10deg" }],
-    top: 30,
-    left: 4
-  },
-  shapeLight: {
-    width: 32,
-    height: 32,
-    backgroundColor: "#f8d86b",
-    borderRadius: 12,
-    top: 20,
-    left: 40
-  },
-  shapeAccent: {
-    width: 26,
-    height: 26,
-    backgroundColor: "#f6f2ff",
-    borderRadius: 10,
-    top: 70,
-    right: 10
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"], typography: ReturnType<typeof useTheme>["typography"]) =>
+  StyleSheet.create({
+    card: {
+      flexDirection: "row",
+      backgroundColor: colors.primary,
+      borderRadius: radius.lg * 1.1,
+      padding: spacing(3),
+      overflow: "hidden",
+      alignItems: "center",
+      ...shadows.card
+    },
+    title: {
+      ...typography.title,
+      fontSize: 22,
+      fontWeight: "800" as const,
+      color: colors.light_text
+    },
+    subtitle: {
+      ...typography.body,
+      marginTop: spacing(1.5),
+      color: colors.light_text
+    },
+    avatarRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: spacing(3)
+    },
+    avatarWrap: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      borderWidth: 2,
+      borderColor: "#d2c4ff",
+      overflow: "hidden",
+      backgroundColor: colors.surface,
+      ...shadows.card
+    },
+    avatar: {
+      width: "100%",
+      height: "100%"
+    },
+    more: {
+      backgroundColor: "#f4f3ff",
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    moreText: {
+      ...typography.meta,
+      fontWeight: "700",
+      color: colors.text
+    },
+    shapes: {
+      width: 110,
+      height: 110,
+      position: "relative",
+      marginLeft: spacing(2),
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    shape: {
+      position: "absolute",
+      borderRadius: 18,
+      opacity: 0.9
+    },
+    shapeDark: {
+      width: 60,
+      height: 60,
+      backgroundColor: "#2f2f3a",
+      transform: [{ rotate: "14deg" }],
+      top: 10,
+      right: 4
+    },
+    shapeMid: {
+      width: 50,
+      height: 50,
+      backgroundColor: "#6e6b88",
+      transform: [{ rotate: "-10deg" }],
+      top: 30,
+      left: 4
+    },
+    shapeLight: {
+      width: 32,
+      height: 32,
+      backgroundColor: "#f8d86b",
+      borderRadius: 12,
+      top: 20,
+      left: 40
+    },
+    shapeAccent: {
+      width: 26,
+      height: 26,
+      backgroundColor: "#f6f2ff",
+      borderRadius: 10,
+      top: 70,
+      right: 10
+    }
+  });

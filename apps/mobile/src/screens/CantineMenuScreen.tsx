@@ -1,29 +1,34 @@
+import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { colors, spacing, typography } from "../theme";
+import { spacing, useTheme } from "../theme";
+import { useTranslation } from "../localization";
 
 export default function CantineMenuScreen() {
+  const { t } = useTranslation();
+  const { colors, typography } = useTheme();
+  const styles = useMemo(() => createStyles(colors, typography), [colors, typography]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cantine Menu</Text>
-      <Text style={styles.body}>
-        List today's meals, allergens, and prices. Hook this up to the campus menu feed.
-      </Text>
+      <Text style={styles.title}>{t("screenCantineTitle")}</Text>
+      <Text style={styles.body}>{t("screenCantineBody")}</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing(4)
-  },
-  title: {
-    ...typography.heading
-  },
-  body: {
-    marginTop: spacing(2),
-    color: colors.text,
-    ...typography.body
-  }
-});
+const createStyles = (colors: ReturnType<typeof useTheme>["colors"], typography: ReturnType<typeof useTheme>["typography"]) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: spacing(4)
+    },
+    title: {
+      ...typography.heading
+    },
+    body: {
+      marginTop: spacing(2),
+      color: colors.text,
+      ...typography.body
+    }
+  });
