@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "source": "apps/mobile/src/theme.tsx",
+    "baseUnit": 4,
+    "frame": {
+      "width": 393,
+      "height": 852
+    }
+  },
+  "color": {
+    "background": {
+      "light": "#F9FAFB",
+      "dark": "#0F0A0D"
+    },
+    "surface": {
+      "light": "#FFFFFF",
+      "dark": "#1A1116"
+    },
+    "primary": {
+      "light": "#971D32",
+      "dark": "#B94B63"
+    },
+    "primaryHover": {
+      "light": "#7F182A",
+      "dark": "#C76075"
+    },
+    "primarySoft": {
+      "light": "#F7E9EC",
+      "dark": "#2D1A22"
+    },
+    "border": {
+      "light": "#E5E7EB",
+      "dark": "#2A1C23"
+    },
+    "text": {
+      "light": "#111827",
+      "dark": "#F5EEF2"
+    },
+    "textMuted": {
+      "light": "#6B7280",
+      "dark": "#C9AAB6"
+    },
+    "danger": {
+      "light": "#DC2626",
+      "dark": "#DC2626"
+    },
+    "success": {
+      "light": "#16A34A",
+      "dark": "#16A34A"
+    },
+    "onPrimary": {
+      "light": "#FFFFFF",
+      "dark": "#F5EEF2"
+    }
+  },
+  "spacing": {
+    "0_5": 2,
+    "0_75": 3,
+    "1": 4,
+    "1_25": 5,
+    "1_5": 6,
+    "2": 8,
+    "3": 12,
+    "3_25": 13,
+    "3_5": 14,
+    "4": 16,
+    "8": 32
+  },
+  "radius": {
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24
+  },
+  "shadow": {
+    "card": {
+      "x": 0,
+      "y": 2,
+      "blur": 6,
+      "spread": 0,
+      "color": "#000000",
+      "opacity": 0.05
+    }
+  },
+  "typography": {
+    "heading": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "fontWeight": 700
+    },
+    "title": {
+      "fontFamily": "SF Pro Rounded / Roboto",
+      "fontSize": 18,
+      "lineHeight": 24,
+      "fontWeight": 600
+    },
+    "subtitle": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 16,
+      "lineHeight": 22,
+      "fontWeight": 600
+    },
+    "body": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 16,
+      "lineHeight": 24,
+      "fontWeight": 400
+    },
+    "bodyStrong": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 16,
+      "lineHeight": 24,
+      "fontWeight": 500
+    },
+    "meta": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "fontWeight": 400
+    },
+    "button": {
+      "fontFamily": "SF Pro / Roboto",
+      "fontSize": 16,
+      "lineHeight": 20,
+      "fontWeight": 600
+    }
+  },
+  "components": {
+    "TopBar": {
+      "avatar": 46,
+      "searchButton": 44,
+      "marginBottom": 16
+    },
+    "BottomNav": {
+      "barRadius": 24,
+      "itemSize": 46,
+      "iconSize": 22,
+      "activeDot": 6
+    },
+    "PrimaryButton": {
+      "heightApprox": 48,
+      "radius": 12,
+      "horizontalPadding": 12
+    },
+    "InfoCard": {
+      "radius": 16,
+      "borderWidth": 1,
+      "padding": 12
+    },
+    "HomeWidget": {
+      "radius": 20.8,
+      "horizontalPadding": 14,
+      "verticalPadding": 13
+    },
+    "DailyChallengeCard": {
+      "radius": 17.6,
+      "avatarSize": 34
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "global": {
+    "color": {
+      "background": {
+        "light": { "value": "#F9FAFB", "type": "color" },
+        "dark": { "value": "#0F0A0D", "type": "color" }
+      },
+      "surface": {
+        "light": { "value": "#FFFFFF", "type": "color" },
+        "dark": { "value": "#1A1116", "type": "color" }
+      },
+      "primary": {
+        "light": { "value": "#971D32", "type": "color" },
+        "dark": { "value": "#B94B63", "type": "color" }
+      },
+      "primaryHover": {
+        "light": { "value": "#7F182A", "type": "color" },
+        "dark": { "value": "#C76075", "type": "color" }
+      },
+      "primarySoft": {
+        "light": { "value": "#F7E9EC", "type": "color" },
+        "dark": { "value": "#2D1A22", "type": "color" }
+      },
+      "border": {
+        "light": { "value": "#E5E7EB", "type": "color" },
+        "dark": { "value": "#2A1C23", "type": "color" }
+      },
+      "text": {
+        "light": { "value": "#111827", "type": "color" },
+        "dark": { "value": "#F5EEF2", "type": "color" }
+      },
+      "textMuted": {
+        "light": { "value": "#6B7280", "type": "color" },
+        "dark": { "value": "#C9AAB6", "type": "color" }
+      },
+      "danger": {
+        "light": { "value": "#DC2626", "type": "color" },
+        "dark": { "value": "#DC2626", "type": "color" }
+      },
+      "success": {
+        "light": { "value": "#16A34A", "type": "color" },
+        "dark": { "value": "#16A34A", "type": "color" }
+      },
+      "onPrimary": {
+        "light": { "value": "#FFFFFF", "type": "color" },
+        "dark": { "value": "#F5EEF2", "type": "color" }
+      }
+    },
+    "spacing": {
+      "0_5": { "value": "2", "type": "spacing" },
+      "0_75": { "value": "3", "type": "spacing" },
+      "1": { "value": "4", "type": "spacing" },
+      "1_25": { "value": "5", "type": "spacing" },
+      "1_5": { "value": "6", "type": "spacing" },
+      "2": { "value": "8", "type": "spacing" },
+      "3": { "value": "12", "type": "spacing" },
+      "3_25": { "value": "13", "type": "spacing" },
+      "3_5": { "value": "14", "type": "spacing" },
+      "4": { "value": "16", "type": "spacing" },
+      "8": { "value": "32", "type": "spacing" }
+    },
+    "radius": {
+      "sm": { "value": "8", "type": "borderRadius" },
+      "md": { "value": "12", "type": "borderRadius" },
+      "lg": { "value": "16", "type": "borderRadius" },
+      "xl": { "value": "24", "type": "borderRadius" }
+    },
+    "shadow": {
+      "card": {
+        "value": {
+          "x": 0,
+          "y": 2,
+          "blur": 6,
+          "spread": 0,
+          "color": "#0000000D",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      }
+    },
+    "typography": {
+      "heading": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "700",
+          "lineHeight": "30",
+          "fontSize": "24"
+        },
+        "type": "typography"
+      },
+      "title": {
+        "value": {
+          "fontFamily": "SF Pro Rounded",
+          "fontWeight": "600",
+          "lineHeight": "24",
+          "fontSize": "18"
+        },
+        "type": "typography"
+      },
+      "subtitle": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "600",
+          "lineHeight": "22",
+          "fontSize": "16"
+        },
+        "type": "typography"
+      },
+      "body": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "400",
+          "lineHeight": "24",
+          "fontSize": "16"
+        },
+        "type": "typography"
+      },
+      "bodyStrong": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "500",
+          "lineHeight": "24",
+          "fontSize": "16"
+        },
+        "type": "typography"
+      },
+      "meta": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "400",
+          "lineHeight": "18",
+          "fontSize": "13"
+        },
+        "type": "typography"
+      },
+      "button": {
+        "value": {
+          "fontFamily": "SF Pro",
+          "fontWeight": "600",
+          "lineHeight": "20",
+          "fontSize": "16"
+        },
+        "type": "typography"
+      }
+    }
+  }
+}

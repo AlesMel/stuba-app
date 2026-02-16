@@ -48,12 +48,6 @@ export default function DailyChallengeCard({
         </View>
       </View>
 
-      <View style={styles.shapes}>
-        <View style={[styles.shape, styles.shapeDark]} />
-        <View style={[styles.shape, styles.shapeMid]} />
-        <View style={[styles.shape, styles.shapeLight]} />
-        <View style={[styles.shape, styles.shapeAccent]} />
-      </View>
     </View>
   );
 }
@@ -108,50 +102,5 @@ const createStyles = (colors: ReturnType<typeof useTheme>["colors"], typography:
       ...typography.meta,
       fontWeight: "700",
       color: colors.text
-    },
-    shapes: {
-      width: 110,
-      height: 110,
-      position: "relative",
-      marginLeft: spacing(2),
-      justifyContent: "center",
-      alignItems: "center"
-    },
-    shape: {
-      position: "absolute",
-      borderRadius: 18,
-      opacity: 0.9
-    },
-    shapeDark: {
-      width: 60,
-      height: 60,
-      backgroundColor: "#2f2f3a",
-      transform: [{ rotate: "14deg" }],
-      top: 10,
-      right: 4
-    },
-    shapeMid: {
-      width: 50,
-      height: 50,
-      backgroundColor: "#6e6b88",
-      transform: [{ rotate: "-10deg" }],
-      top: 30,
-      left: 4
-    },
-    shapeLight: {
-      width: 32,
-      height: 32,
-      backgroundColor: "#f8d86b",
-      borderRadius: 12,
-      top: 20,
-      left: 40
-    },
-    shapeAccent: {
-      width: 26,
-      height: 26,
-      backgroundColor: "#f6f2ff",
-      borderRadius: 10,
-      top: 70,
-      right: 10
     }
   });
